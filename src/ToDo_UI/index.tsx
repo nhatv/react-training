@@ -7,9 +7,9 @@ export default function ToDoList() {
     <Card>
       <h1>To-Do List 📝</h1>
       <AddTask />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
+      <TaskItem task="task one" />
+      <TaskItem task="task two" />
+      <TaskItem task="task three" />
     </Card>
   );
 }
