@@ -1,13 +1,13 @@
-import './App.css'
-import DescribingUI from './Describing_the_UI'
+import "./App.css";
+import DescribingUI from "./Describing_the_UI";
+import ToDoList from "./ToDo_UI";
 
 function App() {
-
   return (
     <>
-      <DescribingUI/>
+      <ToDoList />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
