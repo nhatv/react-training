@@ -2,7 +2,7 @@ export default function FirstComponent() {
   // you should never define a component inside a component
   // you can use define function inside a component
   function renderRow() {
-    return <div>hello</div>;
+    return <h1>hello</h1>;
   }
 
   // JSX rule, it can only return one JSX element
@@ -10,13 +10,14 @@ export default function FirstComponent() {
   return (
     <div>
       <h2>First Component</h2>
+      {renderRow()}
       <Profile
         src="https://i.imgur.com/MK3eW3As.jpg"
         fname="John"
         lname="Doe"
         isAdmin={true}
       />
-      <Profile />
+      <Profile src="https://i.imgur.com/QIrZWGIs.jpg" />
       <Profile />
       <Profile />
     </div>
@@ -45,7 +46,6 @@ function Profile({ src, fname, lname, isAdmin }: any) {
       </div>
       {/* pass variable to props */}
       <img src={src} alt="Katherine Johnson" />
-      <img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson" />
     </div>
   );
 }
