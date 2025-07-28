@@ -1,0 +1,39 @@
+.todo__container {
+  background-color: rgb(95, 104, 134);
+  padding: 60px;
+  padding-top: 25px;
+  border-radius: 8px;
+  width: 40vw;
+}
+
+.todo__input,
+.todo__button {
+  box-sizing: border-box;
+  height: 3rem;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.todo__li {
+  background-color: #242424;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.todo__input,
+.todo__li span,
+.todo__input-edit {
+  padding-left: 1vw;
+  text-align: left;
+}
+
+.todo__li span,
+.todo__input-edit {
+  width: 100%;
+}
+
+.todo__input-edit {
+  border: 1px solid whitesmoke;
+}

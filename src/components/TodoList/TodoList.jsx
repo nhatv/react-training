@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import "./TodoList.css";
 
 const TodoList = () => {
   const [inputValue, setInputValue] = useState("");
@@ -38,21 +39,26 @@ const TodoList = () => {
   };
 
   const handleEdit = (item) => {
+    if (isEditing) {
+      // currently editing but clicked edit again
+      alert("Save or cancel current task first");
+      return;
+    }
     item.isEditing = true;
     setInputEditValue(item.title);
     setIsEditing(true);
     // console.log("i am editing", item.title, item.id);
   };
 
-  const handleSave = (item) => {
+  const handleSave = (id) => {
     const updatedTodoItem = {
-      id: item.id,
+      id: id,
       title: inputEditValue,
       isEditing: false,
     };
     // create new list and find index to update it in the array
     const newTodoList = [...todoList];
-    const updatedItemIndex = todoList.findIndex((i) => i.id === item.id);
+    const updatedItemIndex = todoList.findIndex((i) => i.id === id);
     newTodoList[updatedItemIndex] = updatedTodoItem;
     setTodoList(newTodoList);
     setIsEditing(false);
@@ -72,25 +78,56 @@ const TodoList = () => {
   };
 
   return (
-    <div>
+    <div className="todo__container">
+      <h1>✎To Do List</h1>
       <form action="">
-        <input value={inputValue} onChange={handleChange} />
-        <button onClick={handleSubmit}>Submit</button>
+        <input
+          value={inputValue}
+          onChange={handleChange}
+          className="todo__input"
+        />
+        <button onClick={handleSubmit} className="todo__button">
+          Submit
+        </button>
       </form>
       <div>
         <ul>
           {todoList.map((item) => {
             return item.isEditing ? (
-              <li key={item.id}>
-                <input value={inputEditValue} onChange={handleChangeEdit} />
-                <button onClick={() => handleSave(item)}>Save</button>
-                <button onClick={() => handleCancel(item)}>Cancel</button>
+              <li key={item.id} className="todo__li">
+                <input
+                  value={inputEditValue}
+                  onChange={handleChangeEdit}
+                  className="todo__input todo__input-edit"
+                />
+                <button
+                  onClick={() => handleSave(item.id)}
+                  className="todo__button"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => handleCancel(item)}
+                  className="todo__button"
+                >
+                  Cancel
+                </button>
               </li>
             ) : (
-              <li key={item.id}>
+              <li key={item.id} className="todo__li">
                 <span>{item.title}</span>
-                <button onClick={() => handleEdit(item)}>Edit</button>
-                <button onClick={() => handleDelete(item.id)}>Delete</button>
+                <button
+                  onClick={() => handleEdit(item)}
+                  className="todo__button"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="todo__button"
+                >
+                  Delete
+                </button>
               </li>
             );
           })}
