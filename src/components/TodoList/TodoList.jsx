@@ -44,7 +44,15 @@ const TodoList = () => {
       alert("Save or cancel current task first");
       return;
     }
-    item.isEditing = true;
+    const updatedTodoItem = {
+      id: item.id,
+      title: item.title,
+      isEditing: true,
+    };
+    const newTodoList = [...todoList];
+    const updatedItemIndex = todoList.findIndex((i) => i.id === item.id);
+    newTodoList[updatedItemIndex] = updatedTodoItem;
+    setTodoList(newTodoList);
     setInputEditValue(item.title);
     setIsEditing(true);
     // console.log("i am editing", item.title, item.id);

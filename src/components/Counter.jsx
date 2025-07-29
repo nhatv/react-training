@@ -3,7 +3,7 @@ import React, { useState } from "react";
 let state = 0;
 let snapshot = state;
 state++;
-console.log("snapshot", state, snapshot);
+// console.log("snapshot", state, snapshot);
 
 const Counter = () => {
   const [counter, setCounter] = useState(0);
