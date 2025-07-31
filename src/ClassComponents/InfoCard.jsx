@@ -1,7 +1,7 @@
 import React, { Component, PureComponent } from "react";
 import "./CarApp.css";
 
-// PureComponent: implement a default shouldUpdateComponent method
+// PureComponent: implement a default shouldComponentUpdate method
 export default class InfoCard extends PureComponent {
   render() {
     // destructure props
