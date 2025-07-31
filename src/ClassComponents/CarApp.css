@@ -1,0 +1,17 @@
+.info-card {
+  border: 1px solid white;
+  width: 150px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  pad: 15px;
+}
+
+.car-container {
+  justify-content: center;
+  display: flex;
+  gap: 10px;
+}
