@@ -34,6 +34,7 @@ const TodoList = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     inputRef.current.focus();
+    // could clean this up better by using map and spread operator like in handleToggleCompleted
     const newTodoItem = {
       id: uuidv4(),
       title: inputValue,
@@ -58,6 +59,7 @@ const TodoList = () => {
       alert("Save or cancel current task first");
       return;
     }
+    // could clean this up better by using map and spread operator like in handleToggleCompleted
     const updatedTodoItem = {
       id: item.id,
       title: item.title,
@@ -74,6 +76,7 @@ const TodoList = () => {
   };
 
   const handleSave = (id) => {
+    // could clean this up better by using map and spread operator like in handleToggleCompleted
     const updatedTodoItem = {
       id: id,
       title: inputEditValue,
@@ -89,6 +92,7 @@ const TodoList = () => {
   };
 
   const handleCancel = (item) => {
+    // could clean this up better by using map and spread operator like in handleToggleCompleted
     const oldTodoItem = {
       id: item.id,
       title: item.title,
