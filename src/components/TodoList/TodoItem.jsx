@@ -1,7 +1,7 @@
 import React from "react";
 
 const TodoItem = (props) => {
-  const { id, title, isEditing } = props.item;
+  const { id, title, isEditing, isCompleted } = props.item;
 
   return (
     <li key={id} className="todo__li">
@@ -20,7 +20,7 @@ const TodoItem = (props) => {
           onClick={() => props.handleToggleCompleted(id)}
           className="todo__button"
         >
-          Complete
+          {isCompleted ? "Move" : "Complete"}
         </button>
       </div>
     </li>

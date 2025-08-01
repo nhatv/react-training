@@ -9,7 +9,6 @@ import { v4 as uuidv4 } from "uuid";
 import "./TodoList.css";
 import TodoItemEdit from "./TodoItemEdit";
 import TodoItem from "./TodoItem";
-import TodoItemCompleted from "./TodoItemCompleted";
 
 const TodoList = () => {
   const [inputValue, setInputValue] = useState("");
@@ -34,17 +33,17 @@ const TodoList = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     inputRef.current.focus();
-    // could clean this up better by using map and spread operator like in handleToggleCompleted
+
     const newTodoItem = {
       id: uuidv4(),
       title: inputValue,
       isEditing: false,
+      isCompleted: false,
     };
-    const newTodoList = [...todoList];
-    newTodoList.push(newTodoItem);
+    const newTodoList = [...todoList, newTodoItem];
     setTodoList(newTodoList);
     setInputValue("");
-    console.log(newTodoList);
+    // console.log(newTodoList);
   };
 
   const handleDelete = (id) => {
@@ -53,68 +52,58 @@ const TodoList = () => {
     setTodoList(filteredList);
   };
 
-  const handleEdit = (item) => {
+  const handleEdit = (old) => {
     if (isEditing) {
       // currently editing but clicked edit again
       alert("Save or cancel current task first");
       return;
     }
-    // could clean this up better by using map and spread operator like in handleToggleCompleted
-    const updatedTodoItem = {
-      id: item.id,
-      title: item.title,
-      isEditing: true,
-      isCompleted: false,
-    };
-    const newTodoList = [...todoList];
-    const updatedItemIndex = todoList.findIndex((i) => i.id === item.id);
-    newTodoList[updatedItemIndex] = updatedTodoItem;
+    const newTodoList = todoList.map((item) => {
+      if (item.id === old.id) {
+        return { ...item, id: old.id, title: old.title, isEditing: true };
+      }
+      return item;
+    });
     setTodoList(newTodoList);
-    setInputEditValue(item.title);
+    setInputEditValue(old.title);
     setIsEditing(true);
     // console.log("i am editing", item.title, item.id);
   };
 
   const handleSave = (id) => {
-    // could clean this up better by using map and spread operator like in handleToggleCompleted
-    const updatedTodoItem = {
-      id: id,
-      title: inputEditValue,
-      isEditing: false,
-      isCompleted: false,
-    };
-    // create new list and find index to update it in the array
-    const newTodoList = [...todoList];
-    const updatedItemIndex = todoList.findIndex((i) => i.id === id);
-    newTodoList[updatedItemIndex] = updatedTodoItem;
-    setTodoList(newTodoList);
-    setIsEditing(false);
-  };
-
-  const handleCancel = (item) => {
-    // could clean this up better by using map and spread operator like in handleToggleCompleted
-    const oldTodoItem = {
-      id: item.id,
-      title: item.title,
-      isEditing: false,
-      isCompleted: false,
-    };
-    const newTodoList = [...todoList];
-    const oldItemIndex = todoList.findIndex((i) => i.id === item.id);
-    newTodoList[oldItemIndex] = oldTodoItem;
-    setTodoList(newTodoList);
-    setIsEditing(false);
-  };
-
-  const handleToggleCompleted = useCallback((id) => {
     const newTodoList = todoList.map((item) => {
       if (item.id === id) {
-        return { ...item, isCompleted: !item.isCompleted };
+        return { ...item, title: inputEditValue, isEditing: false };
       }
       return item;
     });
     setTodoList(newTodoList);
-  });
+    setIsEditing(false);
+  };
+
+  const handleCancel = (old) => {
+    const newTodoList = todoList.map((item) => {
+      if (item.id === old.id) {
+        return { ...item, id: old.id, title: old.title, isEditing: false };
+      }
+      return item;
+    });
+    setTodoList(newTodoList);
+    setIsEditing(false);
+  };
+
+  const handleToggleCompleted = useCallback(
+    (id) => {
+      const newTodoList = todoList.map((item) => {
+        if (item.id === id) {
+          return { ...item, isCompleted: !item.isCompleted };
+        }
+        return item;
+      });
+      setTodoList(newTodoList);
+    },
+    [todoList]
+  );
 
   const pendingTodoList = useMemo(
     () => todoList.filter((todo) => !todo.isCompleted),
@@ -177,8 +166,18 @@ const TodoList = () => {
         )}
         <ul>
           {completedTodoList.map((item) => {
-            return (
-              <TodoItemCompleted
+            return item.isEditing ? (
+              <TodoItemEdit
+                key={item.id}
+                item={item}
+                inputEditValue={inputEditValue}
+                handleChangeEdit={handleChangeEdit}
+                handleSave={handleSave}
+                handleCancel={handleCancel}
+                handleToggleCompleted={handleToggleCompleted}
+              />
+            ) : (
+              <TodoItem
                 key={item.id}
                 item={item}
                 handleEdit={handleEdit}
