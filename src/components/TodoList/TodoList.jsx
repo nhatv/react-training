@@ -52,20 +52,20 @@ const TodoList = () => {
     setTodoList(filteredList);
   };
 
-  const handleEdit = (old) => {
+  const handleEdit = (item) => {
     if (isEditing) {
       // currently editing but clicked edit again
       alert("Save or cancel current task first");
       return;
     }
-    const newTodoList = todoList.map((item) => {
-      if (item.id === old.id) {
-        return { ...item, id: old.id, title: old.title, isEditing: true };
+    const newTodoList = todoList.map((i) => {
+      if (i.id === item.id) {
+        return { ...i, isEditing: true };
       }
-      return item;
+      return i;
     });
     setTodoList(newTodoList);
-    setInputEditValue(old.title);
+    setInputEditValue(item.title);
     setIsEditing(true);
     // console.log("i am editing", item.title, item.id);
   };
@@ -81,12 +81,12 @@ const TodoList = () => {
     setIsEditing(false);
   };
 
-  const handleCancel = (old) => {
-    const newTodoList = todoList.map((item) => {
-      if (item.id === old.id) {
-        return { ...item, id: old.id, title: old.title, isEditing: false };
+  const handleCancel = (item) => {
+    const newTodoList = todoList.map((i) => {
+      if (i.id === item.id) {
+        return { ...i, id: item.id, title: item.title, isEditing: false };
       }
-      return item;
+      return i;
     });
     setTodoList(newTodoList);
     setIsEditing(false);

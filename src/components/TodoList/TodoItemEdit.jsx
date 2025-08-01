@@ -4,7 +4,7 @@ const TodoItemEdit = (props) => {
   const { id, title, isEditing } = props.item;
 
   return (
-    <li key={id} className="todo__li">
+    <li className="todo__li">
       <input
         value={props.inputEditValue}
         onChange={props.handleChangeEdit}

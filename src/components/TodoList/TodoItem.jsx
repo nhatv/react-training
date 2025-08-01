@@ -4,7 +4,7 @@ const TodoItem = (props) => {
   const { id, title, isEditing, isCompleted } = props.item;
 
   return (
-    <li key={id} className="todo__li">
+    <li className="todo__li">
       <span>{title}</span>
       <div className="todo__actions">
         <button
