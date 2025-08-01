@@ -1,12 +1,25 @@
-import React, { useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./TodoList.css";
+import TodoItemEdit from "./TodoItemEdit";
+import TodoItem from "./TodoItem";
+import TodoItemCompleted from "./TodoItemCompleted";
 
 const TodoList = () => {
   const [inputValue, setInputValue] = useState("");
   const [todoList, setTodoList] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [inputEditValue, setInputEditValue] = useState("");
+  const [numPendingTasks, setNumPendingTasks] = useState(0);
+  const [numCompletedTasks, setNumCompletedTasks] = useState(0);
+
+  const inputRef = useRef(null);
 
   const handleChange = (event) => {
     // console.log("event", event.target.value);
@@ -20,6 +33,7 @@ const TodoList = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    inputRef.current.focus();
     const newTodoItem = {
       id: uuidv4(),
       title: inputValue,
@@ -48,6 +62,7 @@ const TodoList = () => {
       id: item.id,
       title: item.title,
       isEditing: true,
+      isCompleted: false,
     };
     const newTodoList = [...todoList];
     const updatedItemIndex = todoList.findIndex((i) => i.id === item.id);
@@ -63,6 +78,7 @@ const TodoList = () => {
       id: id,
       title: inputEditValue,
       isEditing: false,
+      isCompleted: false,
     };
     // create new list and find index to update it in the array
     const newTodoList = [...todoList];
@@ -77,6 +93,7 @@ const TodoList = () => {
       id: item.id,
       title: item.title,
       isEditing: false,
+      isCompleted: false,
     };
     const newTodoList = [...todoList];
     const oldItemIndex = todoList.findIndex((i) => i.id === item.id);
@@ -84,6 +101,29 @@ const TodoList = () => {
     setTodoList(newTodoList);
     setIsEditing(false);
   };
+
+  const handleToggleCompleted = useCallback((id) => {
+    const newTodoList = todoList.map((item) => {
+      if (item.id === id) {
+        return { ...item, isCompleted: !item.isCompleted };
+      }
+      return item;
+    });
+    setTodoList(newTodoList);
+  });
+
+  const pendingTodoList = useMemo(
+    () => todoList.filter((todo) => !todo.isCompleted),
+    [todoList]
+  );
+
+  const completedTodoList = useMemo(
+    () => todoList.filter((todo) => todo.isCompleted),
+    [todoList]
+  );
+
+  useEffect(() => setNumPendingTasks(pendingTodoList.length));
+  useEffect(() => setNumCompletedTasks(completedTodoList.length));
 
   return (
     <div className="todo__container">
@@ -93,50 +133,54 @@ const TodoList = () => {
           value={inputValue}
           onChange={handleChange}
           className="todo__input"
+          ref={inputRef}
         />
         <button onClick={handleSubmit} className="todo__button">
           Submit
         </button>
       </form>
-      <div>
+      <div className="todo__container-item">
+        {pendingTodoList.length > 0 && (
+          <h3>Pending Tasks ({numPendingTasks})</h3>
+        )}
         <ul>
-          {todoList.map((item) => {
+          {pendingTodoList.map((item) => {
             return item.isEditing ? (
-              <li key={item.id} className="todo__li">
-                <input
-                  value={inputEditValue}
-                  onChange={handleChangeEdit}
-                  className="todo__input todo__input-edit"
-                />
-                <button
-                  onClick={() => handleSave(item.id)}
-                  className="todo__button"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => handleCancel(item)}
-                  className="todo__button"
-                >
-                  Cancel
-                </button>
-              </li>
+              <TodoItemEdit
+                key={item.id}
+                item={item}
+                inputEditValue={inputEditValue}
+                handleChangeEdit={handleChangeEdit}
+                handleSave={handleSave}
+                handleCancel={handleCancel}
+                handleToggleCompleted={handleToggleCompleted}
+              />
             ) : (
-              <li key={item.id} className="todo__li">
-                <span>{item.title}</span>
-                <button
-                  onClick={() => handleEdit(item)}
-                  className="todo__button"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="todo__button"
-                >
-                  Delete
-                </button>
-              </li>
+              <TodoItem
+                key={item.id}
+                item={item}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+                handleToggleCompleted={handleToggleCompleted}
+              />
+            );
+          })}
+        </ul>
+      </div>
+      <div className="todo__container-item">
+        {completedTodoList.length > 0 && (
+          <h3>Completed Tasks ({numCompletedTasks})</h3>
+        )}
+        <ul>
+          {completedTodoList.map((item) => {
+            return (
+              <TodoItemCompleted
+                key={item.id}
+                item={item}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+                handleToggleCompleted={handleToggleCompleted}
+              />
             );
           })}
         </ul>

@@ -3,7 +3,11 @@
   padding: 60px;
   padding-top: 25px;
   border-radius: 8px;
-  width: 40vw;
+  width: 50vw;
+}
+
+.todo__actions {
+  display: flex;
 }
 
 .todo__input,
