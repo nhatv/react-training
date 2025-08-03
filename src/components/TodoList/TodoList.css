@@ -1,9 +1,15 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
 .todo__container {
   background-color: rgb(95, 104, 134);
   padding: 60px;
   padding-top: 25px;
   border-radius: 8px;
   width: 50vw;
+  margin: 0 auto;
 }
 
 .todo__actions {
@@ -20,7 +26,7 @@
 }
 
 .todo__li {
-  background-color: #242424;
+  background-color: #c0bebe;
   border-radius: 8px;
   display: flex;
   align-items: center;
