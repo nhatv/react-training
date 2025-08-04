@@ -20,8 +20,8 @@ function App() {
       {/* {show && <ClassDemo name={"alice"} age={18} />} */}
       {/* <CarApp /> */}
       {/* <TodoList /> */}
-      {/* <GameBoard /> */}
-      <TodoListCC />
+      <GameBoard />
+      {/* <TodoListCC /> */}
       {/* <CourseImmutability />
       {show && <HookDemo />} */}
     </>

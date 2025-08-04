@@ -1,62 +1,59 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./GameBoard.css";
 
+const WINNING_LINES = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [2, 4, 6],
+  [0, 4, 8],
+];
+
 // pure function
 const checkWinner = (arr) => {
-  // Check rows
-  for (let i = 0; i < 3; i++) {
-    if (arr[i][0] && arr[i][0] === arr[i][1] && arr[i][1] === arr[i][2]) {
-      return arr[i][0];
+  for (let i = 0; i < WINNING_LINES.length; i++) {
+    const [one, two, three] = WINNING_LINES[i];
+    if (arr[one] === arr[two] && arr[two] === arr[three]) {
+      // matching line
+      return arr[one];
     }
   }
-
-  // Check columns
-  for (let j = 0; j < 3; j++) {
-    if (arr[0][j] && arr[0][j] === arr[1][j] && arr[1][j] === arr[2][j]) {
-      return arr[0][j];
-    }
-  }
-
-  // Check diagonals
-  if (arr[0][0] && arr[0][0] === arr[1][1] && arr[1][1] === arr[2][2])
-    return arr[0][0];
-  if (arr[0][2] && arr[0][2] === arr[1][1] && arr[1][1] === arr[2][0])
-    return arr[0][2];
 
   return null;
 };
 
 const GameBoard = () => {
-  const [board, setBoard] = useState(
-    Array.from({ length: 3 }, () => Array(3).fill(null))
-  );
+  const [board, setBoard] = useState(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState("X");
   const [winner, setWinner] = useState(null);
 
-  const movesRef = useRef(0);
+  // const movesRef = useRef(0);
 
   console.log(board);
 
-  const handleClick = (row, col) => {
-    if (board[row][col] || winner) return;
-    const newBoard = board.map((r, i) => {
-      if (i !== row) return r;
-      return r.map((cell, j) => (j === col ? currentPlayer : cell));
+  const handleClick = (idx) => {
+    if (board[idx] || winner) return;
+    const newBoard = board.map((cell, i) => {
+      if (i === idx) return currentPlayer;
+      return cell;
     });
     setBoard(newBoard);
     setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
-    movesRef.current = movesRef.current + 1;
+    // movesRef.current = movesRef.current + 1;
   };
 
   const handleRestart = () => {
-    setBoard(Array.from({ length: 3 }, () => Array(3).fill(null)));
+    setBoard(Array(9).fill(null));
     setCurrentPlayer("X");
     setWinner(null);
-    movesRef.current = 0;
+    // movesRef.current = 0;
   };
 
-  // const isDraw = board.flat().every((cell) => cell !== null);
-  const isDraw = movesRef.current === 9 ? true : false;
+  const isDraw = board.every((cell) => cell !== null);
+  // const isDraw = movesRef.current === 9 ? true : false;
 
   useEffect(() => {
     setWinner(checkWinner(board));
@@ -72,17 +69,15 @@ const GameBoard = () => {
         <h3>It's a Draw</h3>
       ) : null}
       <div className="game-board">
-        {board.map((row, i) =>
-          row.map((cell, j) => (
-            <div
-              key={`${i}-${j}`}
-              className="game-board__cell"
-              onClick={() => handleClick(i, j)}
-            >
-              {cell}
-            </div>
-          ))
-        )}
+        {board.map((cell, i) => (
+          <div
+            key={`${i}`}
+            className="game-board__cell"
+            onClick={() => handleClick(i)}
+          >
+            {cell}
+          </div>
+        ))}
       </div>
       <button onClick={handleRestart}>Restart Game</button>
     </div>
