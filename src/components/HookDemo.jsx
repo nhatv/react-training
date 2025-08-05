@@ -1,19 +1,25 @@
 import React, {
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
+import { CounterContext } from "../context/CounterContext";
 
 const HookDemo = () => {
-  const [counter, setCounter] = useState(0);
+  const {
+    state: { counter, opCount },
+    dispatch,
+  } = useContext(CounterContext);
   const [toggle, setToggle] = useState(true);
 
   const handleAdd = () => {
     counterRef.current = counter + 1;
-    setCounter((prev) => prev + 1);
-    setCounter((prev) => prev + 1);
+    // setCounter((prev) => prev + 1);
+    // setCounter((prev) => prev + 1);
+    dispatch({ type: "INCREMENT", payload: 2 });
   };
 
   // // componentDidMount + componentDidUpdate
@@ -78,7 +84,12 @@ const HookDemo = () => {
     <div>
       <input type="text" ref={inputRef} />
       <div>{counter}</div>
-      <button onClick={handleAdd}>Increment</button>
+      <div>Num of operations: {opCount}</div>
+      <button onClick={handleAdd}>Add 2</button>
+      <button onClick={() => dispatch({ type: "DECREMENT", payload: 3 })}>
+        Subtract 3
+      </button>
+      <button onClick={() => dispatch({ type: "RESET" })}>Reset</button>
       <div>Toggle value: {toggle ? "True" : "False"}</div>
       <button onClick={handleToggle}>Toggle</button>
     </div>

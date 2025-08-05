@@ -1,5 +1,6 @@
 import React, {
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -9,25 +10,33 @@ import { v4 as uuidv4 } from "uuid";
 import "./TodoList.css";
 import TodoItemEdit from "./TodoItemEdit";
 import TodoItem from "./TodoItem";
+import { TodoContext } from "../../context/TodoContext";
 
 const TodoList = () => {
-  const [inputValue, setInputValue] = useState("");
-  const [todoList, setTodoList] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [inputEditValue, setInputEditValue] = useState("");
-  const [numPendingTasks, setNumPendingTasks] = useState(0);
-  const [numCompletedTasks, setNumCompletedTasks] = useState(0);
+  // const [inputValue, setInputValue] = useState("");
+  // const [todoList, setTodoList] = useState([]);
+  // const [isEditing, setIsEditing] = useState(false);
+  // const [inputEditValue, setInputEditValue] = useState("");
+  // const [numPendingTasks, setNumPendingTasks] = useState(0);
+  // const [numCompletedTasks, setNumCompletedTasks] = useState(0);
 
   const inputRef = useRef(null);
 
+  const {
+    state: { inputValue, todoList, isEditing, inputEditValue },
+    dispatch,
+  } = useContext(TodoContext);
+
   const handleChange = (event) => {
     // console.log("event", event.target.value);
-    setInputValue(event.target.value);
+    // setInputValue(event.target.value);
+    dispatch({ type: "CHANGE", payload: event.target.value });
   };
 
   const handleChangeEdit = (event) => {
     // console.log("event", event.target.value);
-    setInputEditValue(event.target.value);
+    // setInputEditValue(event.target.value);
+    dispatch({ type: "CHANGE_EDIT", payload: event.target.value });
   };
 
   const handleSubmit = (e) => {
@@ -40,16 +49,18 @@ const TodoList = () => {
       isEditing: false,
       isCompleted: false,
     };
-    const newTodoList = [...todoList, newTodoItem];
-    setTodoList(newTodoList);
-    setInputValue("");
+    dispatch({ type: "SUBMIT", payload: newTodoItem });
+    // const newTodoList = [...todoList, newTodoItem];
+    // setTodoList(newTodoList);
+    // setInputValue("");
     // console.log(newTodoList);
   };
 
   const handleDelete = (id) => {
     // everything except the target id
     const filteredList = todoList.filter((todo) => todo.id !== id);
-    setTodoList(filteredList);
+    // setTodoList(filteredList);
+    dispatch({ type: "DELETE", payload: filteredList });
   };
 
   const handleEdit = (item) => {
@@ -64,9 +75,10 @@ const TodoList = () => {
       }
       return i;
     });
-    setTodoList(newTodoList);
-    setInputEditValue(item.title);
-    setIsEditing(true);
+    // setTodoList(newTodoList);
+    // setInputEditValue(item.title);
+    // setIsEditing(true);
+    dispatch({ type: "EDIT", payload: { newTodoList, item } });
     // console.log("i am editing", item.title, item.id);
   };
 
@@ -77,8 +89,9 @@ const TodoList = () => {
       }
       return item;
     });
-    setTodoList(newTodoList);
-    setIsEditing(false);
+    // setTodoList(newTodoList);
+    // setIsEditing(false);
+    dispatch({ type: "SAVE", payload: newTodoList });
   };
 
   const handleCancel = (item) => {
@@ -88,8 +101,9 @@ const TodoList = () => {
       }
       return i;
     });
-    setTodoList(newTodoList);
-    setIsEditing(false);
+    // setTodoList(newTodoList);
+    // setIsEditing(false);
+    dispatch({ type: "CANCEL", payload: newTodoList });
   };
 
   const handleToggleCompleted = useCallback(
@@ -100,7 +114,8 @@ const TodoList = () => {
         }
         return item;
       });
-      setTodoList(newTodoList);
+      // setTodoList(newTodoList);
+      dispatch({ type: "TOGGLE_COMPLETED", payload: newTodoList });
     },
     [todoList]
   );
@@ -115,8 +130,10 @@ const TodoList = () => {
     [todoList]
   );
 
-  useEffect(() => setNumPendingTasks(pendingTodoList.length));
-  useEffect(() => setNumCompletedTasks(completedTodoList.length));
+  const numPendingTasks = pendingTodoList.length;
+  const numCompletedTasks = completedTodoList.length;
+  // useEffect(() => setNumPendingTasks(pendingTodoList.length));
+  // useEffect(() => setNumCompletedTasks(completedTodoList.length));
 
   return (
     <div className="todo__container">
