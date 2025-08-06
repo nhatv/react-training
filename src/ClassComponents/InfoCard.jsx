@@ -2,7 +2,7 @@ import React, { Component, PureComponent } from "react";
 import "./CarApp.css";
 
 // PureComponent: implement a default shouldComponentUpdate method
-export default class InfoCard extends PureComponent {
+export default class InfoCard extends Component {
   render() {
     // destructure props
     const { make, quantity, id } = this.props.car;
@@ -21,10 +21,10 @@ export default class InfoCard extends PureComponent {
     );
   }
 
-  shouldComponentUpdate(nextProps) {
-    if (this.props.car === nextProps.props.car) {
-      return false;
-    }
-    return true;
-  }
+  // shouldComponentUpdate(nextProps) {
+  //   if (this.props.car === nextProps.props.car) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 }
