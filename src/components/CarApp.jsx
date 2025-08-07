@@ -6,9 +6,14 @@ import useMySelector from "../hooks/useMySelector";
 import useMyDispatch from "../hooks/useMyDispatch";
 
 const CarApp = () => {
-  const cars = useMySelector((state) => state.cars);
-  const dispatch = useMyDispatch();
-  console.log(store.getState());
+  // custom redux hook
+  // const cars = useMySelector((state) => state.cars);
+  // const dispatch = useMyDispatch();
+
+  const cars = useSelector((state) => state.carReducer);
+  const dispatch = useDispatch();
+
+  console.log(cars);
 
   // useEffect(() => store.subscribe(() => console.log(store.getState())), []);
   return (

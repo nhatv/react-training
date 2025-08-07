@@ -1,48 +1,35 @@
-import { combineReducers, createStore } from "redux";
-const carInitialValue = [
-  {
-    make: "Toyota",
-    quantity: 18,
-    id: 1,
-  },
-  {
-    make: "Honda",
-    quantity: 10,
-    id: 2,
-  },
-  {
-    make: "Nissan",
-    quantity: 42,
-    id: 3,
-  },
-];
-const carReducer = (state = { cars: carInitialValue }, action) => {
-  switch (action.type) {
-    case "SELL":
-      const newState = state.cars.map((car) => {
-        if (car.id === action.payload) {
-          return { ...car, quantity: car.quantity - 1 };
-        }
-        return car;
-      });
-      return { ...state, cars: newState };
-    default:
-      return state;
-  }
-};
+import { applyMiddleware, combineReducers, compose, createStore } from "redux";
+import carReducer from "../slices/CarSlice";
+import monitorReducerEnhancer from "../enhancers/monitorReducer";
+import logger from "../middlewares/logger";
 
-const rootReducer = combineReducers({ carReducer });
+const rootReducer = combineReducers({
+  carReducer,
+});
 
-const myCreateStore = (reducer, preloadedState) => {
+const middlewareEnhancer = applyMiddleware(logger);
+const composedEnhancers = compose(monitorReducerEnhancer, middlewareEnhancer);
+
+const store = createStore(rootReducer, undefined, composedEnhancers);
+// const store = myCreateStore(carReducer);
+
+const myCreateStore = (reducer, preloadedState, enhancer) => {
   const store = {
     state: preloadedState,
     callbackFns: [],
   };
 
-  store.getState = () => store.state;
+  if (enhancer !== undefined) {
+    enhancer(myCreateStore);
+  }
+
+  store.getState = () => {
+    return store.state;
+  };
 
   store.dispatch = (action) => {
     store.state = reducer(store.state, action);
+
     store.callbackFns.forEach((cb) => cb());
   };
 
@@ -56,10 +43,8 @@ const myCreateStore = (reducer, preloadedState) => {
   };
 
   store.dispatch({ type: "@@INIT" });
+
   return store;
 };
-
-// const store = createStore(rootReducer);
-const store = myCreateStore(carReducer);
 
 export default store;

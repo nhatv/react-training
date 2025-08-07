@@ -25,12 +25,12 @@ function App() {
       </button> */}
       {/* {show && <ClassDemo name={"alice"} age={18} />} */}
       {/* <CarApp /> */}
-      {/* <TodoList /> */}
+      <TodoList />
       {/* <GameBoard /> */}
       {/* <TodoListCC /> */}
       {/* <CourseImmutability /> */}
       {/* {show && <HookDemo />} */}
-      <CarApp />
+      {/* <CarApp /> */}
     </>
   );
 }

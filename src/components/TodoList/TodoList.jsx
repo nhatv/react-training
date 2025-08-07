@@ -11,8 +11,11 @@ import "./TodoList.css";
 import TodoItemEdit from "./TodoItemEdit";
 import TodoItem from "./TodoItem";
 import { TodoContext } from "../../context/TodoContext";
+import { useDispatch, useSelector } from "react-redux";
+import todoReducer from "../../slices/TodoSlice";
 
 const TodoList = () => {
+  // INITIAL states
   // const [inputValue, setInputValue] = useState("");
   // const [todoList, setTodoList] = useState([]);
   // const [isEditing, setIsEditing] = useState(false);
@@ -20,12 +23,18 @@ const TodoList = () => {
   // const [numPendingTasks, setNumPendingTasks] = useState(0);
   // const [numCompletedTasks, setNumCompletedTasks] = useState(0);
 
-  const inputRef = useRef(null);
+  // useContext for state
+  // const {
+  //   state: { inputValue, todoList, isEditing, inputEditValue },
+  //   dispatch,
+  // } = useContext(TodoContext);
 
-  const {
-    state: { inputValue, todoList, isEditing, inputEditValue },
-    dispatch,
-  } = useContext(TodoContext);
+  // Redux
+  const state = useSelector((state) => state.todoReducer);
+  const dispatch = useDispatch();
+  // console.log("todo", state);
+
+  const inputRef = useRef(null);
 
   const handleChange = (event) => {
     // console.log("event", event.target.value);
@@ -45,7 +54,7 @@ const TodoList = () => {
 
     const newTodoItem = {
       id: uuidv4(),
-      title: inputValue,
+      title: state.inputValue,
       isEditing: false,
       isCompleted: false,
     };
@@ -58,18 +67,18 @@ const TodoList = () => {
 
   const handleDelete = (id) => {
     // everything except the target id
-    const filteredList = todoList.filter((todo) => todo.id !== id);
+    const filteredList = state.todoList.filter((todo) => todo.id !== id);
     // setTodoList(filteredList);
     dispatch({ type: "DELETE", payload: filteredList });
   };
 
   const handleEdit = (item) => {
-    if (isEditing) {
+    if (state.isEditing) {
       // currently editing but clicked edit again
       alert("Save or cancel current task first");
       return;
     }
-    const newTodoList = todoList.map((i) => {
+    const newTodoList = state.todoList.map((i) => {
       if (i.id === item.id) {
         return { ...i, isEditing: true };
       }
@@ -83,9 +92,9 @@ const TodoList = () => {
   };
 
   const handleSave = (id) => {
-    const newTodoList = todoList.map((item) => {
+    const newTodoList = state.todoList.map((item) => {
       if (item.id === id) {
-        return { ...item, title: inputEditValue, isEditing: false };
+        return { ...item, title: state.inputEditValue, isEditing: false };
       }
       return item;
     });
@@ -95,7 +104,7 @@ const TodoList = () => {
   };
 
   const handleCancel = (item) => {
-    const newTodoList = todoList.map((i) => {
+    const newTodoList = state.todoList.map((i) => {
       if (i.id === item.id) {
         return { ...i, id: item.id, title: item.title, isEditing: false };
       }
@@ -108,7 +117,7 @@ const TodoList = () => {
 
   const handleToggleCompleted = useCallback(
     (id) => {
-      const newTodoList = todoList.map((item) => {
+      const newTodoList = state.todoList.map((item) => {
         if (item.id === id) {
           return { ...item, isCompleted: !item.isCompleted };
         }
@@ -117,17 +126,17 @@ const TodoList = () => {
       // setTodoList(newTodoList);
       dispatch({ type: "TOGGLE_COMPLETED", payload: newTodoList });
     },
-    [todoList]
+    [state.todoList]
   );
 
   const pendingTodoList = useMemo(
-    () => todoList.filter((todo) => !todo.isCompleted),
-    [todoList]
+    () => state.todoList.filter((item) => !item.isCompleted),
+    [state.todoList]
   );
 
   const completedTodoList = useMemo(
-    () => todoList.filter((todo) => todo.isCompleted),
-    [todoList]
+    () => state.todoList.filter((item) => item.isCompleted),
+    [state.todoList]
   );
 
   const numPendingTasks = pendingTodoList.length;
@@ -140,7 +149,7 @@ const TodoList = () => {
       <h1>✎To Do List</h1>
       <form action="">
         <input
-          value={inputValue}
+          value={state.inputValue}
           onChange={handleChange}
           className="todo__input"
           ref={inputRef}
@@ -159,7 +168,7 @@ const TodoList = () => {
               <TodoItemEdit
                 key={item.id}
                 item={item}
-                inputEditValue={inputEditValue}
+                inputEditValue={state.inputEditValue}
                 handleChangeEdit={handleChangeEdit}
                 handleSave={handleSave}
                 handleCancel={handleCancel}
@@ -187,7 +196,7 @@ const TodoList = () => {
               <TodoItemEdit
                 key={item.id}
                 item={item}
-                inputEditValue={inputEditValue}
+                inputEditValue={state.inputEditValue}
                 handleChangeEdit={handleChangeEdit}
                 handleSave={handleSave}
                 handleCancel={handleCancel}
