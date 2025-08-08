@@ -13,6 +13,17 @@ import TodoItem from "./TodoItem";
 import { TodoContext } from "../../context/TodoContext";
 import { useDispatch, useSelector } from "react-redux";
 import todoReducer from "../../slices/TodoSlice";
+import {
+  cancel,
+  change,
+  changeEdit,
+  del,
+  edit,
+  fetchInitialTodo,
+  save,
+  submit,
+  toggleCompleted,
+} from "../../slices/rtkTodoSlice";
 
 const TodoList = () => {
   // INITIAL states
@@ -30,7 +41,7 @@ const TodoList = () => {
   // } = useContext(TodoContext);
 
   // Redux
-  const state = useSelector((state) => state.todoReducer);
+  const state = useSelector((state) => state.todo);
   const dispatch = useDispatch();
   // console.log("todo", state);
 
@@ -39,13 +50,15 @@ const TodoList = () => {
   const handleChange = (event) => {
     // console.log("event", event.target.value);
     // setInputValue(event.target.value);
-    dispatch({ type: "CHANGE", payload: event.target.value });
+    // dispatch({ type: "CHANGE", payload: event.target.value });
+    dispatch(change(event.target.value));
   };
 
   const handleChangeEdit = (event) => {
     // console.log("event", event.target.value);
     // setInputEditValue(event.target.value);
-    dispatch({ type: "CHANGE_EDIT", payload: event.target.value });
+    // dispatch({ type: "CHANGE_EDIT", payload: event.target.value });
+    dispatch(changeEdit(event.target.value));
   };
 
   const handleSubmit = (e) => {
@@ -58,18 +71,20 @@ const TodoList = () => {
       isEditing: false,
       isCompleted: false,
     };
-    dispatch({ type: "SUBMIT", payload: newTodoItem });
     // const newTodoList = [...todoList, newTodoItem];
     // setTodoList(newTodoList);
     // setInputValue("");
+    // dispatch({ type: "SUBMIT", payload: newTodoItem });
     // console.log(newTodoList);
+    dispatch(submit(newTodoItem));
   };
 
   const handleDelete = (id) => {
     // everything except the target id
     const filteredList = state.todoList.filter((todo) => todo.id !== id);
     // setTodoList(filteredList);
-    dispatch({ type: "DELETE", payload: filteredList });
+    // dispatch({ type: "DELETE", payload: filteredList });
+    dispatch(del(filteredList));
   };
 
   const handleEdit = (item) => {
@@ -87,7 +102,8 @@ const TodoList = () => {
     // setTodoList(newTodoList);
     // setInputEditValue(item.title);
     // setIsEditing(true);
-    dispatch({ type: "EDIT", payload: { newTodoList, item } });
+    // dispatch({ type: "EDIT", payload: { newTodoList, item } });
+    dispatch(edit({ newTodoList, item }));
     // console.log("i am editing", item.title, item.id);
   };
 
@@ -100,7 +116,8 @@ const TodoList = () => {
     });
     // setTodoList(newTodoList);
     // setIsEditing(false);
-    dispatch({ type: "SAVE", payload: newTodoList });
+    // dispatch({ type: "SAVE", payload: newTodoList });
+    dispatch(save(newTodoList));
   };
 
   const handleCancel = (item) => {
@@ -112,7 +129,8 @@ const TodoList = () => {
     });
     // setTodoList(newTodoList);
     // setIsEditing(false);
-    dispatch({ type: "CANCEL", payload: newTodoList });
+    // dispatch({ type: "CANCEL", payload: newTodoList });
+    dispatch(cancel(newTodoList));
   };
 
   const handleToggleCompleted = useCallback(
@@ -124,7 +142,8 @@ const TodoList = () => {
         return item;
       });
       // setTodoList(newTodoList);
-      dispatch({ type: "TOGGLE_COMPLETED", payload: newTodoList });
+      // dispatch({ type: "TOGGLE_COMPLETED", payload: newTodoList });
+      dispatch(toggleCompleted(newTodoList));
     },
     [state.todoList]
   );
@@ -143,6 +162,10 @@ const TodoList = () => {
   const numCompletedTasks = completedTodoList.length;
   // useEffect(() => setNumPendingTasks(pendingTodoList.length));
   // useEffect(() => setNumCompletedTasks(completedTodoList.length));
+
+  useEffect(() => {
+    dispatch(fetchInitialTodo());
+  }, []);
 
   return (
     <div className="todo__container">

@@ -4,17 +4,22 @@ import store from "../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import useMySelector from "../hooks/useMySelector";
 import useMyDispatch from "../hooks/useMyDispatch";
+import { sellCar } from "../actions/cars.actions";
+import { sell } from "../slices/rtkCarsSlice";
 
 const CarApp = () => {
   // custom redux hook
   // const cars = useMySelector((state) => state.cars);
   // const dispatch = useMyDispatch();
 
-  const cars = useSelector((state) => state.carReducer);
+  const cars = useSelector((state) => state.cars); // use name of carSlice
   const dispatch = useDispatch();
 
   console.log(cars);
 
+  useEffect(() => {
+    dispatch(fetchInitialCarData());
+  }, []);
   // useEffect(() => store.subscribe(() => console.log(store.getState())), []);
   return (
     <>
@@ -24,7 +29,7 @@ const CarApp = () => {
           <InfoCard
             key={car.id}
             car={car}
-            handleSell={(id) => dispatch({ type: "SELL", payload: id })}
+            handleSell={(id) => dispatch(sell(id))}
           />
         ))}
       </ul>

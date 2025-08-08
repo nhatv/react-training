@@ -17,7 +17,7 @@ const carInitialValue = [
 ];
 
 const carReducer = (state = carInitialValue, action) => {
-  console.log("in car reducer");
+  // console.log("in car reducer");
   switch (action.type) {
     case "SELL":
       const newState = state.map((car) => {
@@ -29,6 +29,12 @@ const carReducer = (state = carInitialValue, action) => {
       console.log("new state", newState);
       return newState;
 
+    case "RESTOCK":
+      return;
+    case "ADD_CAR":
+      return;
+    case "REMOVE_CAR":
+      return;
     default:
       return state;
   }

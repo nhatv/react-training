@@ -2,13 +2,17 @@ import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import carReducer from "../slices/CarSlice";
 import monitorReducerEnhancer from "../enhancers/monitorReducer";
 import logger from "../middlewares/logger";
+import { composeWithDevTools } from "@redux-devtools/extension";
 
 const rootReducer = combineReducers({
   carReducer,
 });
 
 const middlewareEnhancer = applyMiddleware(logger);
-const composedEnhancers = compose(monitorReducerEnhancer, middlewareEnhancer);
+const composedEnhancers = composeWithDevTools(
+  monitorReducerEnhancer,
+  middlewareEnhancer
+);
 
 const store = createStore(rootReducer, undefined, composedEnhancers);
 // const store = myCreateStore(carReducer);
