@@ -11,6 +11,9 @@ import GameBoard from "./Components/TicTacToe/GameBoard";
 import TodoListCC from "./ClassComponents/TodoListCC/TodoListCC";
 import { CounterContext } from "./context/CounterContext";
 import CarApp from "./Components/CarApp";
+import MyRoutes from "./MyRouter/MyRoutes";
+import MyRoute from "./MyRouter/MyRoute";
+import MyLink from "./MyRouter/MyLink";
 
 function App() {
   const [show, setShow] = useState(true);
@@ -25,12 +28,23 @@ function App() {
       </button> */}
       {/* {show && <ClassDemo name={"alice"} age={18} />} */}
       {/* <CarApp /> */}
-      <TodoList />
+      {/* <TodoList /> */}
       {/* <GameBoard /> */}
       {/* <TodoListCC /> */}
       {/* <CourseImmutability /> */}
       {/* {show && <HookDemo />} */}
       {/* <CarApp /> */}
+      <nav>
+        <MyLink to="/todolist">Todo List</MyLink>
+        <MyLink to="/car">Car App</MyLink>
+        <MyLink to="/counter">Counter</MyLink>
+      </nav>
+
+      <MyRoutes>
+        <MyRoute path="/todolist" element={<TodoList />} />
+        <MyRoute path="/car" element={<CarApp />} />
+        <MyRoute path="/counter" element={<Counter />} />
+      </MyRoutes>
     </>
   );
 }

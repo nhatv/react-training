@@ -8,15 +8,18 @@ import { Provider } from "react-redux";
 import { createContext } from "react";
 import todoStore from "./store/todoStore.js";
 import rtkTodoStore from "./store/rtkTodoStore.js";
+import MyBrowserRouter from "./MyRouter/MyBrowserRouter.jsx";
 
 export const MyStore = createContext(null);
 
 createRoot(document.getElementById("root")).render(
-  <Provider store={rtkTodoStore}>
-    {/* // <MyStore value={{ store }}> */}
-    {/* <TodoProvider> */}
-    <App />
-    {/* </TodoProvider> */}
-    {/* // </MyStore> */}
-  </Provider>
+  <MyBrowserRouter>
+    <Provider store={rtkTodoStore}>
+      {/* // <MyStore value={{ store }}> */}
+      {/* <TodoProvider> */}
+      <App />
+      {/* </TodoProvider> */}
+      {/* // </MyStore> */}
+    </Provider>
+  </MyBrowserRouter>
 );
