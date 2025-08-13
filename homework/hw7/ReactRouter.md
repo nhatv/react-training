@@ -1,0 +1,9 @@
+1. What is a single page application? A single page application is a web app that loads only one HTML page. When the user interacts with the single page app, the page doesn't need to reload the page in order to update the data.
+
+2. What is client side rendering and server side rendering? Compare their pros and cons. The difference between client side and server side rendering is where the HTML page gets rendered. In client side rendering, the browser renders the HTML page and updates it with JavaScript. Server side rendering renders the HTML page on a server then sends it to the browser. This step makes user interaction less responsive on server side than client side. The benefit of using server side rendering over client side is that the server does all the work rendering so less powerful devices would still have a good experience.
+
+3. What is routing? Why do we need it? Routing is like using a GPS. You tell it where you want to go and the router will give you the best path to get there. We need routing to navigate through websites easily.
+
+4. What is the difference between history and location objects? History is about moving forward or backwards through a browser's history. It doesn't cause page reloads. Location lets us know where we are by giving a current URL and we can change to different URLs.
+
+5. Describe the mechanism of react router. React router lets us handling routing in our React app by defining routes with paths and an element to be rendered when reaching that path. We wrap our BrowserRouter component around the app component so that we can use the router context within our app. The BrowserRouter will let us navigate the routes in our app and it will let the routes know the current path by using the router context. We can use the Link component to call the navigate function.
